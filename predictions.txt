@@ -1,0 +1,30 @@
+===================================================================
+PROJECT PREDICTIONS DOCUMENT: DATA REPLICATION VS. ERASURE CODING
+===================================================================
+
+[PREDICTION 1: STORAGE CONSUMPTION RAW FOOTPRINT]
+We predict that the Erasure Coding (RS 3,2) configuration will drastically
+reduce disk utilization compared to the default 3x Replication policy. 
+- Math Baseline: 3x Replication incurs a 200% storage overhead (3x multiplier). 
+- RS(3,2) incurs a 66.7% storage overhead (1.67x multiplier).
+- Conclusion: RS(3,2) will save roughly 44.4% more physical space on big data.
+
+[PREDICTION 2: LARGE FILE THROUGHPUT PERFORMANCE]
+We predict that standard 3x Replication will achieve higher write/upload 
+speeds for large datasets. Erasure Coding requires the CPU to compute 
+Reed-Solomon parity matrix transformations in real-time before distributing data, 
+which introduces processing bottlenecks on basic consumer systems.
+
+[PREDICTION 3: SMALL SMALL FILE EFFICIENCY]
+We predict that Erasure Coding will perform poorly when handling a directory 
+of 100 small files. Because each block requires fixed-size metadata, 
+padding, and parity overhead, the mathematical processing cost will far 
+outweigh the storage savings, resulting in slower transfer times than Replication.
+
+[PREDICTION 4: SYSTEM UNDER INDUCED NODE COALESCENCE / CRASH]
+During active downloads where a DataNode is killed mid-transit, 
+we predict the Replication cluster will maintain stable download speeds. 
+Conversely, the Erasure Coding cluster will experience a significant drop 
+in download speed (latency spike) because the system must pause to run matrix 
+inversion algebra over GF(2^8) to reconstruct the missing blocks.
+===================================================================
